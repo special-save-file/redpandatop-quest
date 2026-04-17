@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Panda Quest: High Roller Edition</title>
+    <style>
+        :root {
+            --gold: #d4af37;
+            --neon-blue: #00f3ff;
+            --witcher-red: #a3262e;
+            --dark-bg: #0a0a0c;
+            --card-bg: rgba(255, 255, 255, 0.07);
+        }
+
+        body {
+            margin: 0;
+            font-family: 'Segoe UI', sans-serif;
+            background: var(--dark-bg);
+            color: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            overflow: hidden;
+        }
+
+        .screen {
+            position: absolute;
+            width: 100%;
+            max-width: 950px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            box-sizing: border-box;
+            transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+            text-align: center;
+        }
+
+        .hidden { display: none !important; opacity: 0; transform: scale(0.9) translateY(30px); }
+
+        h1 { font-size: clamp(2.2rem, 8vw, 4rem); text-shadow: 0 0 20px var(--gold); letter-spacing: 5px; margin-bottom: 10px; }
+        .accent { color: var(--gold); }
+
+        .btn-main {
+            padding: 15px 45px;
+            background: transparent;
+            color: var(--gold);
+            border: 2px solid var(--gold);
+            cursor: pointer;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            transition: 0.3s;
+            margin-top: 20px;
+            font-weight: bold;
+        }
+
+        .btn-main:hover { background: var(--gold); color: black; box-shadow: 0 0 30px var(--gold); }
+
+        .option {
+            width: 100%; max-width: 500px;
+            padding: 18px; margin: 10px;
+            background: var(--card-bg); border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 12px; cursor: pointer; transition: 0.3s;
+        }
+        .option:hover { border-color: var(--neon-blue); background: rgba(0, 243, 255, 0.05); transform: scale(1.02); }
+
+        .bamboo-container { display: flex; gap: 20px; margin-top: 30px; }
+        .bamboo-item {
+            width: clamp(80px, 15vw, 110px); height: 140px;
+            background: var(--card-bg); border: 1px solid #333; border-radius: 15px;
+            display: flex; align-items: center; justify-content: center;
+            cursor: pointer; font-size: 3rem; transition: 0.3s;
+        }
+
+        /* Профіль та адаптивність */
+        .profile-grid {
+            display: grid; 
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); 
+            gap: 30px;
+            background: rgba(15, 15, 20, 0.98); padding: 40px; border-radius: 24px;
+            border: 1px solid rgba(212, 175, 55, 0.2); width: 100%;
+            text-align: left;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .avatar-wrap { 
+            width: 140px; height: 140px; border-radius: 50%; border: 3px solid var(--gold); 
+            margin: 0 auto 15px; overflow: hidden; cursor: pointer; transition: 0.3s;
+        }
+        .avatar-wrap:active { transform: scale(0.9); }
+        .avatar-wrap img { width: 100%; height: 100%; object-fit: cover; }
+
+        .bar-outer { width: 100%; height: 14px; background: #1a1a1a; border-radius: 7px; margin: 6px 0 15px; overflow: hidden; }
+        .bar-inner { height: 100%; width: 0; background: var(--gold); transition: width 1.5s ease-out; box-shadow: 0 0 10px var(--gold); }
+
+        /* Інвентар */
+        .inventory {
+            display: flex; justify-content: center; gap: 10px; margin-top: 15px; padding-top: 15px; border-top: 1px solid #333;
+        }
+        .inv-slot {
+            width: 45px; height: 45px; background: #111; border: 1px solid var(--gold); 
+            border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 1.2rem;
+        }
+
+        .cards-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+        .wish-card {
+            background: #111; border: 1px solid #333; border-radius: 10px;
+            padding: 15px 5px; text-align: center; cursor: pointer; transition: 0.3s;
+            font-size: 0.8rem; font-weight: bold; min-height: 65px;
+            display: flex; align-items: center; justify-content: center;
+        }
+        .wish-card.viewed { border-color: #555; opacity: 0.8; }
+        
+        .wish-card.final-locked { background: #050505; border-color: #222; color: #444; cursor: not-allowed; }
+        .wish-card.final-ready { 
+            background: var(--witcher-red) !important; 
+            border-color: var(--gold) !important; 
+            color: white !important; 
+            box-shadow: 0 0 15px var(--witcher-red);
+            cursor: pointer;
+        }
+
+        #wish-display { 
+            margin-top: 25px; padding: 20px; border-left: 4px solid var(--gold); 
+            background: rgba(255,255,255,0.03); min-height: 100px; font-size: 1.05rem; line-height: 1.6;
+        }
+
+        /* Звук */
+        .audio-ctrl { position: fixed; top: 20px; right: 20px; z-index: 100; cursor: pointer; font-size: 1.5rem; opacity: 0.6; }
+        .audio-ctrl:hover { opacity: 1; }
+
+        canvas { position: absolute; top: 0; left: 0; pointer-events: none; }
+
+        @media (max-width: 600px) {
+            .cards-grid { grid-template-columns: repeat(2, 1fr); }
+            .profile-grid { padding: 20px; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="audio-ctrl" onclick="toggleAudio()" id="audio-icon">🔥</div>
+ <audio id="bg-sound" loop src="https://files.catbox.moe/uluvpe.mp3"></audio>
+    <canvas id="confetti"></canvas>
+
+    <div id="start" class="screen">
+        <h1>PANDA <span class="accent">QUEST</span></h1>
+        <p style="color: #555;">Project: R.E.D. P.A.N.D.A.</p>
+        <button class="btn-main" onclick="showScreen('intro-quest')">Завантажити сейв</button>
+    </div>
+
+    <div id="intro-quest" class="screen hidden">
+        <h1 class="accent" style="font-size: 2.2rem;">СКАНУВАННЯ ПРОФІЛЮ</h1>
+        <p style="font-size: 1.2rem; line-height: 1.8; max-width: 700px; color: #ccc;">
+            З'єднання встановлено. Твій статус <b style="color:var(--gold)">High Roller from Rivia</b> вимагає повної синхронізації. 
+            Системі потрібно оцінити твою здатність читати опонентів, аналізувати ризики та обирати свій Шлях.
+        </p>
+        <button class="btn-main" onclick="showScreen('quiz')">Розпочати калібрування</button>
+    </div>
+
+    <div id="quiz" class="screen hidden">
+        <h2 id="q-title" style="margin-bottom: 30px; color: var(--neon-blue);"></h2>
+        <div id="options" style="width: 100%; display: flex; flex-direction: column; align-items: center;"></div>
+    </div>
+
+    <div id="luck-screen" class="screen hidden">
+        <h1 class="accent">КОНФІГУРАЦІЯ УСПІХУ</h1>
+        <p>Обери бамбук для активізації удачі.</p>
+        <div class="bamboo-container">
+            <div class="bamboo-item" onclick="selectLuck('Стабільна', 75)">🎋</div>
+            <div class="bamboo-item" onclick="selectLuck('Максимальна', 90)">🎍</div>
+            <div class="bamboo-item" onclick="selectLuck('Квантова', 100)">🎋</div>
+        </div>
+        <div id="luck-result-text" style="margin-top:20px; font-size:1.5rem; color:var(--neon-blue);"></div>
+    </div>
+
+    <div id="profile" class="screen hidden">
+        <div class="profile-grid">
+            <div class="stats-col">
+                <div class="avatar-wrap" onclick="clickPanda()">
+                    <img src="https://i.ibb.co/nqZc0NGp/image.png" alt="RedPandaTop">
+                </div>
+                <h2 style="text-align: center; margin:0;">RedPandaTop</h2>
+                <p style="text-align: center; color: var(--gold); font-size: 0.8rem; margin-top: 5px; letter-spacing: 1px;">HIGH ROLLER FROM RIVIA</p>
+                
+                <div style="margin-top: 20px;">
+                    <div class="stat-bar"><span>🧠 Logic</span><div class="bar-outer"><div id="bar-logic" class="bar-inner"></div></div></div>
+                    <div class="stat-bar"><span>♠️ Bluff</span><div class="bar-outer"><div id="bar-poker" class="bar-inner"></div></div></div>
+                    <div class="stat-bar"><span>⚔️ Witcher Senses</span><div class="bar-outer"><div id="bar-witcher" class="bar-inner"></div></div></div>
+                    <div class="stat-bar"><span id="luck-label">🍀 Luck</span><div class="bar-outer"><div id="bar-luck" class="bar-inner"></div></div></div>
+                </div>
+
+                <div class="inventory">
+                    <div class="inv-slot" title="Axi">💠</div>
+                    <div class="inv-slot" title="Ace of Spades">♠️</div>
+                    <div class="inv-slot" title="Witcher Medallion">🐺</div>
+                    <div class="inv-slot" title="Potion">🧪</div>
+                </div>
+            </div>
+
+            <div class="cards-col">
+                <h3 class="accent" style="margin-top:0;">🎴 Картки побажань</h3>
+                <div class="cards-grid">
+                    <div class="wish-card" id="card-0" onclick="revealWish(0)">👑 Royal Flush</div>
+                    <div class="wish-card" id="card-1" onclick="revealWish(1)">⚔️ Witcher</div>
+                    <div class="wish-card" id="card-2" onclick="revealWish(2)">🎲 Destiny</div>
+                    <div class="wish-card" id="card-3" onclick="revealWish(3)">🧠 Wisdom</div>
+                    <div class="wish-card" id="card-4" onclick="revealWish(4)">🧪 Alchemy</div>
+                    <div class="wish-card final-locked" id="final-btn" onclick="tryFinal()">🐼 HIDDEN</div>
+                </div>
+                <div id="wish-display">Прочитайте мінімум 3 побажання, щоб розблокувати фінал...</div>
+            </div>
+        </div>
+    </div>
+
+    <div id="final" class="screen hidden">
+        <div style="text-align: center; max-width: 600px;">
+            <h1 style="margin: 0;">З ДНЕМ <span class="accent">НАРОДЖЕННЯ!</span></h1>
+            <div style="font-size: 4rem; margin: 20px;">🎉</div>
+            <p id="final-text" style="font-size: 1.2rem; line-height: 1.7;"></p>
+            <button class="btn-main" onclick="location.reload()">Почати знову</button>
+        </div>
+    </div>
+
+    <script>
+        let step = 0;
+        let stats = { logic: 40, poker: 40, witcher: 40, luck: 0 };
+        let viewedCards = new Set();
+        let pandaClicks = 0;
+        const required = 3;
+
+        const questions = [
+            {
+                q: "💻 У коді знайдено баг, який проявляється раз на місяць:",
+                a: [
+                    { t: "Ретельно дебажити до переможного", s: { logic: 20 } },
+                    { t: "Сказати, що це 'фіча' для рандому", s: { poker: 15 } },
+                    { t: "Випити 'Кішку' і побачити проблему", s: { witcher: 20 } }
+                ]
+            },
+            {
+                q: "🃏 Опонент іде All-in. У тебе середня рука:",
+                a: [
+                    { t: "Порахувати шанси банку та аути", s: { logic: 15 } },
+                    { t: "Заколити з кам'яним обличчям", s: { poker: 25 } },
+                    { t: "Використати знак Аксій", s: { witcher: 20 } }
+                ]
+            },
+            {
+                q: "🍭 Sugar Rush: ретригери йдуть, але спіни порожні:",
+                a: [
+                    { t: "Проаналізувати RTP і піти", s: { logic: 20 } },
+                    { t: "Куплю ще бонуску — удача поруч!", s: { poker: 15 } },
+                    { t: "Зараза... Треба більше еліксирів!", s: { witcher: 25 } }
+                ]
+            }
+        ];
+
+        const wishes = [
+            "👑 **Royal Flush**: Бажаю тобі таких вдалих рішень, щоб навіть гра починала думати: «ну все, з ним марно сперечатися…»",
+            "⚔️ **Witcher Instincts**: Нехай ти завжди обираєш правильний хід — навіть якщо сам не до кінця зрозумів, як ти це зробив.",
+            "🎲 **Destiny**: Нехай твоє Призначення завжди веде тебе до потрібних людей та важливих перемог. Нехай твоє чуття завжди виводить тебе до світла.",
+            "🧠 **Wisdom**: Нехай ясність розуму та чуйність серця допомагають тобі обирати саме ті шляхи, які роблять тебе по-справжньому щасливим.",
+            "🧪 **Alchemy**: Нехай у тебе завжди буде внутрішній запас «еліксирів», щоб швидко відновити сили та натхнення у будь-який момент."
+        ];
+
+        function showScreen(id) {
+            document.querySelectorAll('.screen').forEach(s => s.classList.add('hidden'));
+            const next = document.getElementById(id);
+            next.classList.remove('hidden');
+            if(id === 'quiz') loadQ();
+            if(id === 'profile') animateStats();
+        }
+
+        function loadQ() {
+            const data = questions[step];
+            document.getElementById('q-title').innerText = data.q;
+            const box = document.getElementById('options');
+            box.innerHTML = '';
+            data.a.forEach(ans => {
+                const b = document.createElement('div');
+                b.className = 'option'; b.innerText = ans.t;
+                b.onclick = () => {
+                    for(let k in ans.s) stats[k] += ans.s[k];
+                    step++;
+                    if(step < questions.length) loadQ();
+                    else showScreen('luck-screen');
+                };
+                box.appendChild(b);
+            });
+        }
+
+        function selectLuck(name, val) {
+            stats.luckName = name; stats.luck = val;
+            document.getElementById('luck-result-text').innerText = `Статус удачі: ${name}`;
+            setTimeout(() => showScreen('profile'), 1000);
+        }
+
+        function animateStats() {
+            setTimeout(() => {
+                document.getElementById('bar-logic').style.width = Math.min(stats.logic, 100) + '%';
+                document.getElementById('bar-poker').style.width = Math.min(stats.poker, 100) + '%';
+                document.getElementById('bar-witcher').style.width = Math.min(stats.witcher, 100) + '%';
+                document.getElementById('bar-luck').style.width = stats.luck + '%';
+                document.getElementById('luck-label').innerHTML = `🍀 Luck: <b>${stats.luckName}</b>`;
+            }, 400);
+        }
+
+        function revealWish(i) {
+    viewedCards.add(i);
+    document.getElementById(`card-${i}`).classList.add('viewed');
+    
+    // Отримуємо текст побажання
+    let wishText = wishes[i].replace(/\*\*(.*?)\*\*/g, '<b style="color:var(--gold)">$1</b>');
+    
+    // Формуємо статус-рядок для підказки
+    let remaining = required - viewedCards.size;
+    let statusHint = "";
+    
+    if (remaining > 0) {
+        statusHint = `<div style="margin-top:15px; font-size:0.9rem; color:var(--witcher-red); border-top:1px solid #333; pt-10px;">
+            ⚠️ Залишилося прочитати ще ${remaining} ${remaining === 1 ? 'побажання' : 'побажання'}, щоб розблокувати фінал...
+        </div>`;
+    } else {
+        statusHint = `<div style="margin-top:15px; font-size:0.9rem; color:var(--neon-blue); border-top:1px solid #333; pt-10px;">
+            ✅ Фінальний рівень розблоковано! Натискай на PANDA HIDDEN!
+        </div>`;
+    }
+
+    // Виводимо побажання + підказку
+    document.getElementById('wish-display').innerHTML = wishText + statusHint;
+    
+    // Розблокуємо кнопку, якщо умови виконані
+    if(viewedCards.size >= required) {
+        const f = document.getElementById('final-btn');
+        f.classList.remove('final-locked');
+        f.classList.add('final-ready');
+        f.innerText = "🐼 UNLOCKED"; // Змінюємо текст на кнопці для наочності
+    }
+}
+
+        function clickPanda() {
+            pandaClicks++;
+            if(pandaClicks === 5) {
+                alert("🍭 MAX WIN розблоковано: +100 до удачі!");
+                stats.luck = 100;
+                stats.luckName = "JACKPOT";
+                animateStats();
+            }
+        }
+
+        function tryFinal() {
+            if(viewedCards.size < required) return;
+            showScreen('final');
+            document.getElementById('final-text').innerHTML = "Ти дивовижна людина, і твоя енергія заряджає все навколо. Нехай у твоєму житті завжди буде місце для справжніх див, а кожен новий день приносить привід для щирої усмішки. <br><br><b style='color:var(--gold); font-size: 1.4rem;'>Ти — є ти, і це твоя головна суперсила! ✨</b>";
+            startConfetti();
+        }
+
+        function toggleAudio() {
+            const audio = document.getElementById('bg-sound');
+            const icon = document.getElementById('audio-icon');
+            if (audio.paused) {
+                audio.play();
+                icon.innerText = "🔊";
+            } else {
+                audio.pause();
+                icon.innerText = "🔥";
+            }
+        }
+
+        function startConfetti() {
+            const canvas = document.getElementById('confetti');
+            const ctx = canvas.getContext('2d');
+            canvas.width = window.innerWidth; canvas.height = window.innerHeight;
+            let particles = [];
+            for (let i = 0; i < 150; i++) {
+                particles.push({
+                    x: Math.random() * canvas.width,
+                    y: Math.random() * canvas.height - canvas.height,
+                    size: Math.random() * 7 + 2,
+                    speed: Math.random() * 3 + 2,
+                    color: `hsl(${Math.random() * 360}, 70%, 60%)`
+                });
+            }
+            function draw() {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                particles.forEach(p => {
+                    ctx.fillStyle = p.color; ctx.fillRect(p.x, p.y, p.size, p.size);
+                    p.y += p.speed; if (p.y > canvas.height) p.y = -10;
+                });
+                requestAnimationFrame(draw);
+            }
+            draw();
+        }
+    </script>
+</body>
+</html>
