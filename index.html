@@ -75,7 +75,6 @@
             cursor: pointer; font-size: 3rem; transition: 0.3s;
         }
 
-        /* Профіль та адаптивність */
         .profile-grid {
             display: grid; 
             grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); 
@@ -97,7 +96,6 @@
         .bar-outer { width: 100%; height: 14px; background: #1a1a1a; border-radius: 7px; margin: 6px 0 15px; overflow: hidden; }
         .bar-inner { height: 100%; width: 0; background: var(--gold); transition: width 1.5s ease-out; box-shadow: 0 0 10px var(--gold); }
 
-        /* Інвентар */
         .inventory {
             display: flex; justify-content: center; gap: 10px; margin-top: 15px; padding-top: 15px; border-top: 1px solid #333;
         }
@@ -129,7 +127,6 @@
             background: rgba(255,255,255,0.03); min-height: 100px; font-size: 1.05rem; line-height: 1.6;
         }
 
-        /* Звук */
         .audio-ctrl { position: fixed; top: 20px; right: 20px; z-index: 100; cursor: pointer; font-size: 1.5rem; opacity: 0.6; }
         .audio-ctrl:hover { opacity: 1; }
 
@@ -311,37 +308,33 @@
         }
 
         function revealWish(i) {
-    viewedCards.add(i);
-    document.getElementById(`card-${i}`).classList.add('viewed');
-    
-    // Отримуємо текст побажання
-    let wishText = wishes[i].replace(/\*\*(.*?)\*\*/g, '<b style="color:var(--gold)">$1</b>');
-    
-    // Формуємо статус-рядок для підказки
-    let remaining = required - viewedCards.size;
-    let statusHint = "";
-    
-    if (remaining > 0) {
-        statusHint = `<div style="margin-top:15px; font-size:0.9rem; color:var(--witcher-red); border-top:1px solid #333; pt-10px;">
-            ⚠️ Залишилося прочитати ще ${remaining} ${remaining === 1 ? 'побажання' : 'побажання'}, щоб розблокувати фінал...
-        </div>`;
-    } else {
-        statusHint = `<div style="margin-top:15px; font-size:0.9rem; color:var(--neon-blue); border-top:1px solid #333; pt-10px;">
-            ✅ Фінальний рівень розблоковано! Натискай на PANDA HIDDEN!
-        </div>`;
-    }
+            viewedCards.add(i);
+            document.getElementById(`card-${i}`).classList.add('viewed');
+            
+            let wishText = wishes[i].replace(/\*\*(.*?)\*\*/g, '<b style="color:var(--gold)">$1</b>');
+            
+            let remaining = required - viewedCards.size;
+            let statusHint = "";
+            
+            if (remaining > 0) {
+                statusHint = `<div style="margin-top:15px; font-size:0.9rem; color:var(--gold); border-top:1px solid #333; padding-top:10px;">
+                    🔒 Залишилося прочитати ще ${remaining} ${remaining === 1 ? 'побажання' : 'побажання'}, щоб розблокувати фінал...
+                </div>`;
+            } else {
+                statusHint = `<div style="margin-top:15px; font-size:0.9rem; color:var(--neon-blue); border-top:1px solid #333; padding-top:10px;">
+                    ✅ Фінальний рівень розблоковано! Натискай на PANDA HIDDEN!
+                </div>`;
+            }
 
-    // Виводимо побажання + підказку
-    document.getElementById('wish-display').innerHTML = wishText + statusHint;
-    
-    // Розблокуємо кнопку, якщо умови виконані
-    if(viewedCards.size >= required) {
-        const f = document.getElementById('final-btn');
-        f.classList.remove('final-locked');
-        f.classList.add('final-ready');
-        f.innerText = "🐼 UNLOCKED"; // Змінюємо текст на кнопці для наочності
-    }
-}
+            document.getElementById('wish-display').innerHTML = wishText + statusHint;
+            
+            if(viewedCards.size >= required) {
+                const f = document.getElementById('final-btn');
+                f.classList.remove('final-locked');
+                f.classList.add('final-ready');
+                f.innerText = "🐼 UNLOCKED"; 
+            }
+        }
 
         function clickPanda() {
             pandaClicks++;
