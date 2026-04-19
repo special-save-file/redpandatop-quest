@@ -23,6 +23,24 @@
             align-items: center;
             min-height: 100vh;
             overflow: hidden;
+            transition: filter 0.3s ease;
+        }
+
+        /* Ефекти зору */
+        body.witcher-sense {
+            filter: sepia(0.5) contrast(1.2) brightness(0.8);
+            box-shadow: inset 0 0 100px rgba(163, 38, 46, 0.6);
+        }
+
+        body.cat-vision {
+            animation: catDrunk 4s infinite ease-in-out;
+            filter: hue-rotate(45deg) brightness(1.2);
+        }
+
+        @keyframes catDrunk {
+            0%, 100% { transform: rotate(0deg) scale(1); }
+            25% { transform: rotate(1.5deg) scale(1.03); }
+            75% { transform: rotate(-1.5deg) scale(0.97); }
         }
 
         .screen {
@@ -59,6 +77,17 @@
 
         .btn-main:hover { background: var(--gold); color: black; box-shadow: 0 0 30px var(--gold); }
 
+        .btn-floating {
+            animation: floatBtn 2.5s infinite ease-in-out;
+            border-color: var(--neon-blue) !important;
+            color: var(--neon-blue) !important;
+        }
+        @keyframes floatBtn {
+            0%, 100% { transform: translate(0, 0); }
+            33% { transform: translate(20px, -15px); }
+            66% { transform: translate(-15px, 20px); }
+        }
+
         .option {
             width: 100%; max-width: 500px;
             padding: 18px; margin: 10px;
@@ -66,6 +95,79 @@
             border-radius: 12px; cursor: pointer; transition: 0.3s;
         }
         .option:hover { border-color: var(--neon-blue); background: rgba(0, 243, 255, 0.05); transform: scale(1.02); }
+
+        /* Jaskier / Dandelion RPG UI */
+        .rpg-dialog-container {
+            display: flex;
+            align-items: flex-end;
+            gap: 20px;
+            max-width: 800px;
+            width: 100%;
+            margin-top: 20px;
+        }
+        .rpg-portrait {
+            width: 180px;
+            height: 240px;
+            border: 3px solid var(--gold);
+            border-radius: 10px;
+            overflow: hidden;
+            background: #1a1a1a;
+            box-shadow: 0 0 20px rgba(212, 175, 55, 0.3);
+            flex-shrink: 0;
+        }
+        .rpg-portrait img { width: 100%; height: 100%; object-fit: cover; }
+        .rpg-bubble {
+            background: rgba(0, 0, 0, 0.85);
+            border: 2px solid var(--gold);
+            border-radius: 5px;
+            padding: 20px;
+            position: relative;
+            text-align: left;
+            flex-grow: 1;
+            min-height: 120px;
+            box-shadow: inset 0 0 15px rgba(212, 175, 55, 0.1);
+        }
+        .rpg-name {
+            position: absolute;
+            top: -15px;
+            left: 20px;
+            background: var(--gold);
+            color: black;
+            padding: 2px 15px;
+            font-weight: bold;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+        }
+        .rpg-text { font-size: 1.1rem; line-height: 1.5; color: #eee; }
+
+        /* Rubber Duck Styles */
+        #status-bar {
+            background: #1a1a1a; padding: 10px 20px; border-radius: 5px;
+            font-family: monospace; margin-bottom: 30px; border-left: 4px solid var(--witcher-red);
+        }
+        .status-critical { color: #ff4444; text-shadow: 0 0 10px #ff4444; }
+        .status-fixed { color: #00ff00; text-shadow: 0 0 10px #00ff00; border-color: #00ff00 !important; }
+
+        .duck-container { font-size: 8rem; cursor: pointer; transition: transform 0.2s; user-select: none; }
+        .duck-squeeze { transform: scale(0.8, 1.2); }
+        .duck-jump { animation: duckJump 0.5s ease; }
+
+        @keyframes duckJump { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-50px) rotate(10deg); } }
+
+        #duck-bubble { background: white; color: black; padding: 15px 25px; border-radius: 20px; margin-bottom: 20px; position: relative; font-weight: bold; max-width: 350px; }
+        #duck-bubble::after { content: ''; position: absolute; bottom: -10px; left: 50%; border-width: 10px 10px 0; border-style: solid; border-color: white transparent; transform: translateX(-50%); }
+
+        /* Gwent Styles */
+        .innkeeper-dialog { background: rgba(0,0,0,0.8); padding: 30px; border-radius: 15px; border-left: 5px solid var(--gold); max-width: 500px; margin-bottom: 20px; text-align: left; }
+        .gwent-card { width: 240px; height: 360px; cursor: pointer; perspective: 1000px; margin: 20px; }
+        .gwent-inner { position: relative; width: 100%; height: 100%; transition: transform 0.8s; transform-style: preserve-3d; }
+        .gwent-card.flipped .gwent-inner { transform: rotateY(180deg); }
+        .gwent-front, .gwent-back { position: absolute; width: 100%; height: 100%; backface-visibility: hidden; border-radius: 15px; border: 4px solid var(--gold); display: flex; flex-direction: column; align-items: center; justify-content: center; box-sizing: border-box; }
+        .gwent-back { background: #1a1a1a; background-image: repeating-linear-gradient(45deg, #111, #111 10px, #1a1a1a 10px, #1a1a1a 20px); }
+        .gwent-front { background: #111; transform: rotateY(180deg); padding: 20px; box-shadow: inset 0 0 50px rgba(212, 175, 55, 0.2); }
+        .gwent-power { position: absolute; top: 10px; left: 10px; width: 45px; height: 45px; background: var(--gold); color: black; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 1.5rem; border: 2px solid white; box-shadow: 0 0 10px var(--gold); }
+        .shake-refuse { animation: shakeBtn 0.4s; }
+        @keyframes shakeBtn { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-10px); } 75% { transform: translateX(10px); } }
 
         .bamboo-container { display: flex; gap: 20px; margin-top: 30px; }
         .bamboo-item {
@@ -89,38 +191,45 @@
         .avatar-wrap { 
             width: 140px; height: 140px; border-radius: 50%; border: 3px solid var(--gold); 
             margin: 0 auto 15px; overflow: hidden; cursor: pointer; transition: 0.3s;
+            box-shadow: 0 0 15px rgba(212, 175, 55, 0.3);
         }
-        .avatar-wrap:active { transform: scale(0.9); }
         .avatar-wrap img { width: 100%; height: 100%; object-fit: cover; }
 
         .bar-outer { width: 100%; height: 14px; background: #1a1a1a; border-radius: 7px; margin: 6px 0 15px; overflow: hidden; }
         .bar-inner { height: 100%; width: 0; background: var(--gold); transition: width 1.5s ease-out; box-shadow: 0 0 10px var(--gold); }
 
         .inventory {
-            display: flex; justify-content: center; gap: 10px; margin-top: 15px; padding-top: 15px; border-top: 1px solid #333;
+            display: flex; justify-content: center; gap: 12px; margin-top: 15px; padding-top: 15px; border-top: 1px solid #333;
         }
         .inv-slot {
-            width: 45px; height: 45px; background: #111; border: 1px solid var(--gold); 
-            border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 1.2rem;
+            width: 48px; height: 48px; background: #111; border: 1px solid var(--gold); 
+            border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 1.3rem;
+            cursor: help; transition: 0.3s;
         }
+        .inv-slot:hover { transform: translateY(-5px); box-shadow: 0 5px 15px rgba(212, 175, 55, 0.4); background: #1a1a1a; }
+        .inv-slot.active-click { animation: pulse-red 0.5s; }
 
         .cards-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
         .wish-card {
-            background: #111; border: 1px solid #333; border-radius: 10px;
-            padding: 15px 5px; text-align: center; cursor: pointer; transition: 0.3s;
+            background: linear-gradient(135deg, #1a1a1a 0%, #111 100%); border: 1px solid #444; border-radius: 10px;
+            padding: 15px 5px; text-align: center; cursor: pointer; transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             font-size: 0.8rem; font-weight: bold; min-height: 65px;
             display: flex; align-items: center; justify-content: center;
+            position: relative; overflow: hidden;
         }
-        .wish-card.viewed { border-color: #555; opacity: 0.8; }
+        .wish-card:hover { border-color: var(--gold); transform: translateY(-5px) scale(1.05); box-shadow: 0 10px 20px rgba(0,0,0,0.5); }
+        .wish-card.viewed { border-color: #555; opacity: 0.7; }
         
         .wish-card.final-locked { background: #050505; border-color: #222; color: #444; cursor: not-allowed; }
         .wish-card.final-ready { 
             background: var(--witcher-red) !important; 
             border-color: var(--gold) !important; 
             color: white !important; 
-            box-shadow: 0 0 15px var(--witcher-red);
-            cursor: pointer;
+            box-shadow: 0 0 20px var(--witcher-red);
+            animation: breathe 2s infinite;
         }
+
+        @keyframes breathe { 0%, 100% { opacity: 1; } 50% { opacity: 0.8; } }
 
         #wish-display { 
             margin-top: 25px; padding: 20px; border-left: 4px solid var(--gold); 
@@ -128,20 +237,13 @@
         }
 
         .audio-ctrl { position: fixed; top: 20px; right: 20px; z-index: 100; cursor: pointer; font-size: 1.5rem; opacity: 0.6; }
-        .audio-ctrl:hover { opacity: 1; }
-
         canvas { position: absolute; top: 0; left: 0; pointer-events: none; }
-
-        @media (max-width: 600px) {
-            .cards-grid { grid-template-columns: repeat(2, 1fr); }
-            .profile-grid { padding: 20px; }
-        }
     </style>
 </head>
 <body>
 
     <div class="audio-ctrl" onclick="toggleAudio()" id="audio-icon">🔥</div>
- <audio id="bg-sound" loop src="https://files.catbox.moe/uluvpe.mp3"></audio>
+    <audio id="bg-sound" loop src="https://files.catbox.moe/uluvpe.mp3"></audio>
     <canvas id="confetti"></canvas>
 
     <div id="start" class="screen">
@@ -153,8 +255,7 @@
     <div id="intro-quest" class="screen hidden">
         <h1 class="accent" style="font-size: 2.2rem;">СКАНУВАННЯ ПРОФІЛЮ</h1>
         <p style="font-size: 1.2rem; line-height: 1.8; max-width: 700px; color: #ccc;">
-            З'єднання встановлено. Твій статус <b style="color:var(--gold)">High Roller from Rivia</b> вимагає повної синхронізації. 
-            Системі потрібно оцінити твою здатність читати опонентів, аналізувати ризики та обирати свій Шлях.
+           Ласкаво просимо, <b style="color:var(--gold)">RedPandaTop</b>. Твій ігровий профіль виявлено. Для повної активації High Roller-модуля потрібно пройти фінальну перевірку навичок.
         </p>
         <button class="btn-main" onclick="showScreen('quiz')">Розпочати калібрування</button>
     </div>
@@ -162,6 +263,54 @@
     <div id="quiz" class="screen hidden">
         <h2 id="q-title" style="margin-bottom: 30px; color: var(--neon-blue);"></h2>
         <div id="options" style="width: 100%; display: flex; flex-direction: column; align-items: center;"></div>
+    </div>
+
+    <div id="jaskier-screen" class="screen hidden">
+        <h2 class="accent">ЗУСТРІЧ В КОРЧМІ</h2>
+        <div class="rpg-dialog-container">
+            <div class="rpg-portrait">
+                <img src="https://files.catbox.moe/gwuhwu.png" alt="Любисток">
+            </div>
+            <div class="rpg-bubble">
+                <div class="rpg-name">Любисток</div>
+                <div id="jaskier-text-box" class="rpg-text"></div>
+            </div>
+        </div>
+        <button class="btn-main" onclick="showScreen('luck-screen')">Досить балачок, вперед до успіху!</button>
+    </div>
+
+    <div id="debug-screen" class="screen hidden">
+        <div id="status-bar"><span id="status-text" class="status-critical">Status: Critical Bug Found</span></div>
+        <div id="duck-bubble">Клікни на мене, щоб почати...</div>
+        <div id="duck-target" class="duck-container" onclick="handleDuckClick()">🦆</div>
+        <button id="debug-next-btn" class="btn-main hidden">Йти далі</button>
+    </div>
+
+    <div id="gwent-init" class="screen hidden">
+        <div class="innkeeper-dialog">
+            <p style="font-size: 1.3rem; margin: 0; line-height: 1.5;">
+                <b>Корчмар:</b> «Покер — це дитячі забавки для тих, хто боїться справжнього азарту. Справжні майстри міряються силами в Гвінті. Зіграємо одну партію?»
+            </p>
+        </div>
+        <div style="display: flex; gap: 15px;">
+            <button class="btn-main" onclick="showScreen('gwent-game')">Давай карти!</button>
+            <button id="refuse-gwent" class="btn-main" style="border-color: #555; color: #555;" onclick="refuseGwent(this)">Мені треба йти</button>
+        </div>
+    </div>
+
+    <div id="gwent-game" class="screen hidden">
+        <h2 class="accent" style="letter-spacing: 3px;">ВАША КАРТА</h2>
+        <div class="gwent-card" onclick="flipGwentCard(this)">
+            <div class="gwent-inner">
+                <div class="gwent-back"></div>
+                <div class="gwent-front">
+                    <div class="gwent-power">99</div>
+                    <div style="font-size: 6rem; margin-bottom: 10px;">🐼</div>
+                    <div style="font-size: 1.4rem; color: var(--gold); font-weight: bold;">Man, you're so lucky!</div>
+                </div>
+            </div>
+        </div>
+        <button id="collect-luck-btn" class="btn-main hidden" onclick="finishStep()">Collect your luck 🍀</button>
     </div>
 
     <div id="luck-screen" class="screen hidden">
@@ -192,10 +341,10 @@
                 </div>
 
                 <div class="inventory">
-                    <div class="inv-slot" title="Axi">💠</div>
-                    <div class="inv-slot" title="Ace of Spades">♠️</div>
-                    <div class="inv-slot" title="Witcher Medallion">🐺</div>
-                    <div class="inv-slot" title="Potion">🧪</div>
+                    <div class="inv-slot" title="Знак Аксій" onclick="invAction('axi', this)">💠</div>
+                    <div class="inv-slot" title="Туз Пік" onclick="invAction('ace', this)">♠️</div>
+                    <div class="inv-slot" title="Медальйон Вовка" onclick="invAction('wolf', this)">🐺</div>
+                    <div class="inv-slot" title="Ластівка" onclick="invAction('potion', this)">🧪</div>
                 </div>
             </div>
 
@@ -209,7 +358,7 @@
                     <div class="wish-card" id="card-4" onclick="revealWish(4)">🧪 Alchemy</div>
                     <div class="wish-card final-locked" id="final-btn" onclick="tryFinal()">🐼 HIDDEN</div>
                 </div>
-                <div id="wish-display">Прочитайте мінімум 3 побажання, щоб розблокувати фінал...</div>
+                <div id="wish-display">Прочитайте мінімум 3 побажання...</div>
             </div>
         </div>
     </div>
@@ -217,6 +366,7 @@
     <div id="final" class="screen hidden">
         <div style="text-align: center; max-width: 600px;">
             <h1 style="margin: 0;">З ДНЕМ <span class="accent">НАРОДЖЕННЯ!</span></h1>
+            <div id="final-rank" style="color: var(--gold); font-weight: bold; margin-top: 10px; letter-spacing: 2px;"></div>
             <div style="font-size: 4rem; margin: 20px;">🎉</div>
             <p id="final-text" style="font-size: 1.2rem; line-height: 1.7;"></p>
             <button class="btn-main" onclick="location.reload()">Почати знову</button>
@@ -228,33 +378,42 @@
         let stats = { logic: 40, poker: 40, witcher: 40, luck: 0 };
         let viewedCards = new Set();
         let pandaClicks = 0;
+        let duckClickCount = 0;
+        let currentDebugMode = "standard";
+        let lastSugarChoice = 0; // Для реплік Любистка
         const required = 3;
 
         const questions = [
             {
                 q: "💻 У коді знайдено баг, який проявляється раз на місяць:",
                 a: [
-                    { t: "Ретельно дебажити до переможного", s: { logic: 20 } },
-                    { t: "Сказати, що це 'фіча' для рандому", s: { poker: 15 } },
-                    { t: "Випити 'Кішку' і побачити проблему", s: { witcher: 20 } }
+                    { t: "Ретельно дебажити до переможного", special: "duck", mode: "standard", s: { logic: 20 } },
+                    { t: "Сказати, що це 'фіча', за яку ще треба доплатити", special: "duck", mode: "profit", s: { poker: 15 } },
+                    { t: "Випити 'Кішку' і побачити проблему", special: "duck", mode: "cat", s: { witcher: 20 } }
                 ]
             },
             {
                 q: "🃏 Опонент іде All-in. У тебе середня рука:",
                 a: [
-                    { t: "Порахувати шанси банку та аути", s: { logic: 15 } },
-                    { t: "Заколити з кам'яним обличчям", s: { poker: 25 } },
-                    { t: "Використати знак Аксій", s: { witcher: 20 } }
+                    { t: "Порахувати шанси банку та аути", special: "gwent", s: { logic: 15 } },
+                    { t: "Натиснути 'Call' з такою силою, щоб у опонента блимнув монітор", special: "gwent", s: { poker: 25 } },
+                    { t: "Використати знак Аксій", special: "gwent", s: { witcher: 20 } }
                 ]
             },
             {
-                q: "🍭 Sugar Rush: ретригери йдуть, але спіни порожні:",
+                q: "🍭 Sugar Rush: ретригери в бонусках йдуть, але спіни порожні:",
                 a: [
-                    { t: "Проаналізувати RTP і піти", s: { logic: 20 } },
-                    { t: "Куплю ще бонуску — удача поруч!", s: { poker: 15 } },
-                    { t: "Зараза... Треба більше еліксирів!", s: { witcher: 25 } }
+                    { t: "Прикинути мат-очікування, посміятися з нього і закрити слот", s: { logic: 20 }, choiceId: 0 },
+                    { t: "Куплю ще бонуску — удача поруч!", s: { poker: 15 }, choiceId: 1 },
+                    { t: "Зараза... Треба більше еліксирів!", s: { witcher: 25 }, choiceId: 2 }
                 ]
             }
+        ];
+
+        const jaskierLines = [
+            "«О, бачу тут у нас серйозна людина! Математика — це добре, але де ж драма? Де азарт? Хоча... розумно. Краще зберегти монети на лютню, ніж залишити їх у пузі цього солодкого монстра!»",
+            "«Ось це мій стиль! Гуляємо на всі! Пані Удачо, ви чуєте цей дзвін монет? Це звук нашої майбутньої слави... або майбутнього довгого і сердитого бурчання Геральта!»",
+            "«Друже, ти виглядаєш так, ніби щойно зустрів грифона в темному провулку. Пий свою Ластівку, а я поки заспіваю щось бадьоре. Кажуть, під мою музику ретригери падають частіше!»"
         ];
 
         const wishes = [
@@ -267,10 +426,25 @@
 
         function showScreen(id) {
             document.querySelectorAll('.screen').forEach(s => s.classList.add('hidden'));
-            const next = document.getElementById(id);
-            next.classList.remove('hidden');
+            document.getElementById(id).classList.remove('hidden');
             if(id === 'quiz') loadQ();
             if(id === 'profile') animateStats();
+            if(id === 'jaskier-screen') typeJaskierText();
+        }
+
+        function typeJaskierText() {
+            const box = document.getElementById('jaskier-text-box');
+            const fullText = jaskierLines[lastSugarChoice];
+            box.innerHTML = "";
+            let i = 0;
+            const timer = setInterval(() => {
+                if (i < fullText.length) {
+                    box.innerHTML += fullText.charAt(i);
+                    i++;
+                } else {
+                    clearInterval(timer);
+                }
+            }, 30);
         }
 
         function loadQ() {
@@ -283,12 +457,91 @@
                 b.className = 'option'; b.innerText = ans.t;
                 b.onclick = () => {
                     for(let k in ans.s) stats[k] += ans.s[k];
-                    step++;
-                    if(step < questions.length) loadQ();
-                    else showScreen('luck-screen');
+                    if (ans.choiceId !== undefined) lastSugarChoice = ans.choiceId;
+
+                    if (ans.special === "duck") {
+                        currentDebugMode = ans.mode;
+                        duckClickCount = 0;
+                        document.getElementById('duck-bubble').innerText = "Клікни на мене...";
+                        document.getElementById('status-text').innerText = "Status: Critical Bug Found";
+                        document.getElementById('status-text').className = "status-critical";
+                        document.getElementById('debug-next-btn').classList.add('hidden');
+                        document.body.classList.remove('cat-vision');
+                        showScreen('debug-screen');
+                    } else if (ans.special === "gwent") {
+                        showScreen('gwent-init');
+                    } else {
+                        finishStep();
+                    }
                 };
                 box.appendChild(b);
             });
+        }
+
+        function handleDuckClick() {
+            duckClickCount++;
+            const duck = document.getElementById('duck-target');
+            const bubble = document.getElementById('duck-bubble');
+            const nextBtn = document.getElementById('debug-next-btn');
+
+            if (currentDebugMode === "cat") {
+                document.body.classList.add('cat-vision');
+                bubble.innerText = "Ой-ой... А ти точно випив 'Кішку'? Бо градус тут явно підвищується! Кря!";
+                duck.classList.add('duck-jump');
+                setTimeout(()=>duck.classList.remove('duck-jump'),500);
+                nextBtn.innerText = "Опа опа... Йти далі";
+                nextBtn.classList.add('btn-floating', 'btn-main');
+                nextBtn.classList.remove('hidden');
+                nextBtn.onclick = () => { document.body.classList.remove('cat-vision'); finishStep(); };
+            } 
+            else if (currentDebugMode === "profit") {
+                if (duckClickCount === 1) {
+                    bubble.innerText = "🔍 Аналіз ринку... (Шукаю того, хто повірить, що так і треба)";
+                    duck.classList.add('duck-squeeze'); setTimeout(()=>duck.classList.remove('duck-squeeze'),200);
+                } else if (duckClickCount === 2) {
+                    bubble.innerText = "Геніально. Продала твий баг сусідній качці за три бамбуки. Кря!";
+                    duck.classList.add('duck-jump');
+                    document.getElementById('status-text').innerText = "Status: Sold as Feature";
+                    document.getElementById('status-text').className = "status-fixed";
+                    nextBtn.innerText = "Отримати профіт";
+                    nextBtn.classList.remove('hidden');
+                    nextBtn.onclick = () => finishStep();
+                }
+            } 
+            else {
+                if (duckClickCount === 1) bubble.innerText = "🔍 Пошук... (Я уважно слухаю твої пояснення логіки)";
+                else if (duckClickCount === 2) bubble.innerText = "💡 А ось воно що... (Здається, той if на 148-му рядку був зайвим)";
+                else if (duckClickCount === 3) {
+                    bubble.innerText = "✅ А тепер пофікшено! Твоя терплячість лякає навіть процесор.";
+                    document.getElementById('status-text').innerText = "Status: Fixed";
+                    document.getElementById('status-text').className = "status-fixed";
+                    nextBtn.innerText = "Здати таск та йти далі";
+                    nextBtn.classList.remove('hidden');
+                    nextBtn.onclick = () => finishStep();
+                }
+                duck.classList.add('duck-squeeze'); setTimeout(()=>duck.classList.remove('duck-squeeze'),200);
+            }
+        }
+
+        function refuseGwent(btn) {
+            btn.classList.add('shake-refuse');
+            btn.innerText = "Нікуди ти не йдеш!";
+            setTimeout(() => {
+                alert("Нікуди ти не йдеш. Гвінт — це святе. Світ зачекає, а партія сама себе не зіграє!");
+                btn.style.display = 'none';
+            }, 400);
+        }
+
+        function flipGwentCard(card) {
+            if (card.classList.contains('flipped')) return;
+            card.classList.add('flipped');
+            document.getElementById('collect-luck-btn').classList.remove('hidden');
+        }
+
+        function finishStep() {
+            step++;
+            if(step < questions.length) showScreen('quiz');
+            else showScreen('jaskier-screen'); // Перехід до Любистка
         }
 
         function selectLuck(name, val) {
@@ -307,84 +560,60 @@
             }, 400);
         }
 
+        function invAction(item, el) {
+            el.classList.add('active-click'); setTimeout(() => el.classList.remove('active-click'), 500);
+            const d = document.getElementById('wish-display');
+            if (item === 'wolf') {
+                document.body.classList.add('witcher-sense'); setTimeout(() => document.body.classList.remove('witcher-sense'), 1000);
+                d.innerHTML = "<i style='color:var(--witcher-red)'>Медальйон тремтить... Поруч сильна магія.</i>";
+            } else if (item === 'axi') d.innerHTML = "<i>Ви використали Аксій. Світ здається трохи простішим.</i>";
+            else if (item === 'ace') d.innerHTML = "<i>Туз у рукаві додає впевненості.</i>";
+            else d.innerHTML = "<i>Ви випили Ластівку. Енергія відновлена.</i>";
+        }
+
         function revealWish(i) {
             viewedCards.add(i);
             document.getElementById(`card-${i}`).classList.add('viewed');
-            
-            let wishText = wishes[i].replace(/\*\*(.*?)\*\*/g, '<b style="color:var(--gold)">$1</b>');
-            
-            let remaining = required - viewedCards.size;
-            let statusHint = "";
-            
-            if (remaining > 0) {
-                statusHint = `<div style="margin-top:15px; font-size:0.9rem; color:var(--gold); border-top:1px solid #333; padding-top:10px;">
-                    🔒 Залишилося прочитати ще ${remaining} ${remaining === 1 ? 'побажання' : 'побажання'}, щоб розблокувати фінал...
-                </div>`;
-            } else {
-                statusHint = `<div style="margin-top:15px; font-size:0.9rem; color:var(--neon-blue); border-top:1px solid #333; padding-top:10px;">
-                    ✅ Фінальний рівень розблоковано! Натискай на PANDA HIDDEN!
-                </div>`;
-            }
-
-            document.getElementById('wish-display').innerHTML = wishText + statusHint;
-            
+            let txt = wishes[i].replace(/\*\*(.*?)\*\*/g, '<b style="color:var(--gold)">$1</b>');
+            let rem = required - viewedCards.size;
+            let hint = rem > 0 ? `<div style="margin-top:10px; color:var(--gold); border-top:1px solid #333;">🔒 Залишилося ще ${rem}...</div>` : `<div style="margin-top:10px; color:var(--neon-blue); border-top:1px solid #333;">✅ Фінал розблоковано!</div>`;
+            document.getElementById('wish-display').innerHTML = txt + hint;
             if(viewedCards.size >= required) {
                 const f = document.getElementById('final-btn');
-                f.classList.remove('final-locked');
-                f.classList.add('final-ready');
-                f.innerText = "🐼 UNLOCKED"; 
+                f.classList.remove('final-locked'); f.classList.add('final-ready'); f.innerText = "🐼 UNLOCKED";
             }
         }
 
         function clickPanda() {
             pandaClicks++;
-            if(pandaClicks === 5) {
-                alert("🍭 MAX WIN розблоковано: +100 до удачі!");
-                stats.luck = 100;
-                stats.luckName = "JACKPOT";
-                animateStats();
-            }
+            if(pandaClicks === 5) { alert("🍭 MAX WIN: +100 до удачі!"); stats.luck = 100; stats.luckName = "JACKPOT"; animateStats(); }
         }
 
         function tryFinal() {
             if(viewedCards.size < required) return;
             showScreen('final');
-            document.getElementById('final-text').innerHTML = "Володя, ти дивовижна людина, і твоя енергія заряджає все навколо. Нехай у твоєму житті завжди буде місце для справжніх див, а кожен новий день приносить привід для щирої усмішки. <br><br><b style='color:var(--gold); font-size: 1.4rem;'>Ти — є ти, і це твоя головна суперсила! ✨</b>";
+            let rank = stats.logic > stats.poker ? "MASTER OF LOGIC" : "POKER LEGEND";
+            if (stats.witcher > 60) rank = "GRANDMASTER WITCHER";
+            document.getElementById('final-rank').innerText = `ЗВАННЯ: ${rank}`;
+            document.getElementById('final-text').innerHTML = "Володя, ти дивовижна людина, і твоя енергія заряджає все навколо. Нехай у твоєму житті завжди буде місце для справжніх див, а кожен новий день приносить привід для щирої усмішки. І найголовніше — міцного здоров'я тобі та твоїй родині, адже сім'я — це твій головний джекпот! <br><br><b style='color:var(--gold); font-size: 1.4rem;'>Ти — є ти, і це твоя головна суперсила! ✨</b>";
             startConfetti();
         }
 
         function toggleAudio() {
-            const audio = document.getElementById('bg-sound');
-            const icon = document.getElementById('audio-icon');
-            if (audio.paused) {
-                audio.play();
-                icon.innerText = "🔊";
-            } else {
-                audio.pause();
-                icon.innerText = "🔥";
-            }
+            const a = document.getElementById('bg-sound');
+            const i = document.getElementById('audio-icon');
+            if (a.paused) { a.play().catch(()=>{}); i.innerText = "🔊"; } else { a.pause(); i.innerText = "🔥"; }
         }
 
         function startConfetti() {
             const canvas = document.getElementById('confetti');
             const ctx = canvas.getContext('2d');
             canvas.width = window.innerWidth; canvas.height = window.innerHeight;
-            let particles = [];
-            for (let i = 0; i < 150; i++) {
-                particles.push({
-                    x: Math.random() * canvas.width,
-                    y: Math.random() * canvas.height - canvas.height,
-                    size: Math.random() * 7 + 2,
-                    speed: Math.random() * 3 + 2,
-                    color: `hsl(${Math.random() * 360}, 70%, 60%)`
-                });
-            }
+            let p = [];
+            for (let i = 0; i < 150; i++) p.push({ x: Math.random() * canvas.width, y: -20, size: Math.random() * 7 + 2, speed: Math.random() * 3 + 2, color: `hsl(${Math.random() * 360}, 70%, 60%)` });
             function draw() {
                 ctx.clearRect(0, 0, canvas.width, canvas.height);
-                particles.forEach(p => {
-                    ctx.fillStyle = p.color; ctx.fillRect(p.x, p.y, p.size, p.size);
-                    p.y += p.speed; if (p.y > canvas.height) p.y = -10;
-                });
+                p.forEach(part => { ctx.fillStyle = part.color; ctx.fillRect(part.x, part.y, part.size, part.size); part.y += part.speed; if (part.y > canvas.height) part.y = -10; });
                 requestAnimationFrame(draw);
             }
             draw();
